@@ -11,8 +11,8 @@ public class TicTacToeGame {
 		TicTacToeGamer player1 = new TicTacToeGamer(1);
 		TicTacToeGamer player2 = new TicTacToeGamer(2);
 		
-		
 		Scanner sc = new Scanner(System.in);
+		
 		int round = 1;
 
 		boolean gameloop = true;
@@ -22,7 +22,7 @@ public class TicTacToeGame {
 			
 			// Spielzug Spieler1
 			if (player1.isTurn()) {
-				if (playerTurn(board, player1)) {
+				if (playerTurn(board, player1, sc)) {
 					board.drawBoard();
 					if (board.checkWinner(player1)) {
 						System.out.println("SPIELER 1 HAT GEWONNEN!!!! ^,^");
@@ -55,7 +55,7 @@ public class TicTacToeGame {
 			} 
 			// Spielzug Spieler2
 			else {
-				if (playerTurn(board, player2)) {
+				if (playerTurn(board, player2, sc)) {
 					board.drawBoard();
 					if (board.checkWinner(player2)) {
 						System.out.println("SPIELER 2 HAT GEWONNEN!!!! ^,^");
@@ -90,6 +90,8 @@ public class TicTacToeGame {
 			
 		} // Ende gameloop
 		
+		sc.close();
+		
 		String roundString;
 		if (round == 1) {
 			roundString = " Runde! ";
@@ -101,16 +103,49 @@ public class TicTacToeGame {
 	} // Ende main-Methode
 
 	
-	public static boolean playerTurn(TicTacToeBoard board, TicTacToeGamer player) {
+	public static boolean playerTurn(TicTacToeBoard board, TicTacToeGamer player, Scanner sc) {
 		
-		Scanner sc = new Scanner(System.in);
+		int column = 0;
+		boolean columnInput = true;
+		int row = 0;
+		boolean rowInput = true;
 		
 		System.out.println("Dein Zug, Spieler " + player.getNumber() + ".");
-		System.out.print("Spalte: ");
-		int column = sc.nextInt();
-		System.out.print("Reihe: ");
-		int row = sc.nextInt();
+		
+		do {
+			try {
+				System.out.print("Spalte: ");
+				column = inputNumber(sc);
+				columnInput = false;
+				}
+			catch (Exception e) {
+				sc.next();
+				columnInput = true;
+				System.out.println("Inkorrekte Benutzereingabe.... ò.ó");
+			}
+		} while(columnInput);
+		
+		do {
+			try {
+				System.out.print("Reihe: ");
+				row = sc.nextInt();
+				rowInput = false;
+			}
+			catch (Exception e) {
+				sc.next();
+				rowInput = true;
+				System.out.println("Inkorrekte Benutzereingabe.... ò.ó");
+			}
+		} while(rowInput);
+		
+		
 		return board.setSign(player.getSign(), column, row, player.getNumber());
+	}
+	
+	public static int inputNumber(Scanner sc) throws Exception {
+		int number;
+		number = sc.nextInt();
+		return number;
 	}
 	
 	public static boolean nextRound() {
